@@ -1,0 +1,43 @@
+---
+id: tech
+title: Tech context
+parent: brief
+status: active
+owns: []
+related: [architecture]
+updated: {{DATE}}
+---
+
+# Tech context
+
+| | |
+|---|---|
+| Primary language | {{LANGUAGE}} |
+| Runtime | {{RUNTIME}} |
+| Framework | {{FRAMEWORK}} |
+| Build tool | {{BUILD_TOOL}} |
+| Storage | {{STORAGE}} |
+| Network | {{NETWORK}} |
+
+## Testing
+The fact, not the methodology — `.agents/rules/on-demand/testing.md` and the matching
+`test-unit-*`/`test-integration` skill own how to write a test; this is only what's configured.
+
+| | |
+|---|---|
+| Test framework | {{TEST_FRAMEWORK — e.g. JUnit5 + kotlinx-coroutines-test + mockk, pytest, Vitest}} |
+| Run with | `{{TEST_COMMAND}}` |
+| Test files live at | {{TEST_LOCATION_CONVENTION}} |
+| Naming convention | {{TEST_NAMING_CONVENTION — e.g. backtick-name Given/When/Then, `methodName_condition_expectedResult`}} |
+
+## Key libraries
+{{LIBRARY — why it is here, and what it would cost to remove. Only load-bearing ones.}}
+
+## Development setup
+{{SETUP — what a new machine needs before the build works}}
+
+## Technical constraints
+{{CONSTRAINTS — min SDK, browser support, latency budget, offline requirements}}
+
+## Development approach
+{{APPROACH — TDD? trunk-based? release cadence?}}

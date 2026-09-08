@@ -1,0 +1,45 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash({{TEST_COMMAND}})",
+      "Bash({{LINT_COMMAND}})",
+      "Bash(python3 .agents/skills/spec-sync/scripts/build_index.py:*)",
+      "Bash(bash .agents/scripts/link-skills.sh)",
+      "Read(**/*.{{SOURCE_EXT}})",
+      "Read(specs/**)",
+      "Read(.agents/**)",
+      "Edit(**/*.{{SOURCE_EXT}})",
+      "Edit(specs/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash({{BUILD_COMMAND}})",
+      "Edit(.agents/rules/**)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*secrets*)",
+      "Read(./**/*.jks)",
+      "Read(./**/*.pem)",
+      "Edit(specs/INDEX.md)",
+      "Bash(curl:*)"
+    ],
+    "defaultMode": "default"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "{{FORMATTER_COMMAND — e.g. ktlint -F, prettier --write, black}} $CLAUDE_TOOL_INPUT_FILE_PATH" }
+        ]
+      }
+    ]
+  },
+  "includeCoAuthoredBy": false
+}

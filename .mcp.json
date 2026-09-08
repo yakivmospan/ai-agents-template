@@ -1,0 +1,9 @@
+{
+  "_comment": "Claude Code's MCP server pointers. Codex does NOT read this file — Codex subagents bind MCP servers per-agent under [mcp_servers.*] in their own .codex/agents/*.toml. Delete this file if you use no MCP servers.",
+  "mcpServers": {
+    "{{SERVER_NAME}}": {
+      "command": "{{COMMAND}}",
+      "args": ["{{ARGS}}"]
+    }
+  }
+}

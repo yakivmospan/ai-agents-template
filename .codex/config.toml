@@ -1,0 +1,21 @@
+# TEMPLATE — mirrors .claude/settings.json permissions in Codex's own format, and registers the
+# subagent trio defined under .codex/agents/*.toml.
+#
+# settings.json and this file are NOT read by each other's tool — keep permissions in sync by hand.
+# Same for the .claude/agents/*.md ↔ .codex/agents/*.toml pairs: no shared schema, sync by hand.
+#
+# Skills need no entry here: Codex discovers .agents/skills natively by scanning from the working
+# directory up to the repo root. Claude reaches the same folder through the symlinks that
+# .agents/scripts/link-skills.sh creates in .claude/skills/.
+
+model_provider = "openai"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = false
+
+[agents]
+max_threads = 4
+max_depth = 1
+# job_max_runtime_seconds = 1800  # uncomment to override the per-worker timeout

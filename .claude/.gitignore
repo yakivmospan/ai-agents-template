@@ -1,0 +1,5 @@
+.settings.local.json
+
+# Forwarding stubs written by .agents/scripts/link-skills.sh when symlinks are unavailable.
+# The symlinks themselves ARE committed — they are how Claude reaches .agents/skills/.
+.skills/*/.forwarding-stub
