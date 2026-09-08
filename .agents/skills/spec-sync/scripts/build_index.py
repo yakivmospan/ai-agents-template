@@ -11,7 +11,7 @@ hand-update. Per-spec status and completion live in the specs themselves — che
 field and checkboxes in the spec you're interested in.
 
 Usage:
-    python3 build_index.py [--specs-dir specs] [--repo-root .] [--check]
+    python3 build_index.py [--specs-dir .specs] [--repo-root .] [--check]
 
 --check exits 1 if INDEX.md would change or drift was found. Use it in CI.
 """
@@ -27,8 +27,6 @@ from pathlib import Path
 
 # Directories never reported as "unowned". Build output, tooling, and the agent setup itself.
 # Skipping only affects unowned-reporting — routing is unaffected either way.
-# .specs, .agents, .claude, .codex are dot-prefixed and already excluded by the dotdir check below;
-# listed anyway for readability, since a reader shouldn't have to know that fact to trust this set.
 SKIP_DIRS = {
     ".git", "node_modules", "build", "dist", "out", "target", "vendor",
     ".gradle", ".idea", "__pycache__", ".venv", "venv", ".next", ".mypy_cache",
@@ -312,7 +310,9 @@ def validate(specs: list[Spec], repo_root: Path, specs_dir: Path) -> tuple[list[
 # --------------------------------------------------------------------------- render
 
 
-def render_tree(specs: list[Spec], repo_root: Path) -> str:
+def render_tree(specs: list[Spec], specs_dir: Path) -> str:
+    # Links are relative to specs_dir, not repo_root: INDEX.md lives inside specs_dir, and a
+    # markdown relative link resolves against the file that contains it, not the repo root.
     by_parent: dict[str | None, list[Spec]] = {}
     for spec in specs:
         by_parent.setdefault(spec.parent, []).append(spec)
@@ -321,7 +321,7 @@ def render_tree(specs: list[Spec], repo_root: Path) -> str:
 
     def walk(parent: str | None, depth: int) -> None:
         for spec in sorted(by_parent.get(parent, []), key=lambda s: s.path.name):
-            rel = spec.path.relative_to(repo_root).as_posix()
+            rel = spec.path.relative_to(specs_dir).as_posix()
             flag = "" if spec.status == "active" else f" _({spec.status})_"
             lines.append(f"{'  ' * depth}- [`{spec.id}`]({rel}) — {spec.title}{flag}")
             walk(spec.id, depth + 1)
@@ -331,13 +331,14 @@ def render_tree(specs: list[Spec], repo_root: Path) -> str:
     known = {s.id for s in specs}
     orphans = [s for s in specs if s.parent and s.parent not in known]
     for spec in orphans:
-        rel = spec.path.relative_to(repo_root).as_posix()
+        rel = spec.path.relative_to(specs_dir).as_posix()
         lines.append(f"- [`{spec.id}`]({rel}) — {spec.title} _(orphan: unknown parent)_")
 
     return "\n".join(lines) or "_No specs yet._"
 
 
-def render_routes(specs: list[Spec], repo_root: Path) -> str:
+def render_routes(specs: list[Spec], specs_dir: Path) -> str:
+    # See render_tree: links are relative to specs_dir, where INDEX.md itself lives.
     rows: list[tuple[str, Spec]] = [(p, s) for s in specs for p in s.owns]
     rows.sort(key=lambda r: glob_specificity(r[0]), reverse=True)
 
@@ -346,13 +347,13 @@ def render_routes(specs: list[Spec], repo_root: Path) -> str:
 
     out = ["| Code path | Spec | Parent |", "|---|---|---|"]
     for pattern, spec in rows:
-        rel = spec.path.relative_to(repo_root).as_posix()
+        rel = spec.path.relative_to(specs_dir).as_posix()
         parent = f"`{spec.parent}`" if spec.parent else "—"
         out.append(f"| `{pattern}` | [`{spec.id}`]({rel}) | {parent} |")
     return "\n".join(out)
 
 
-def render_index(specs: list[Spec], errors: list[str], gaps: list[str], repo_root: Path) -> str:
+def render_index(specs: list[Spec], errors: list[str], gaps: list[str], specs_dir: Path) -> str:
     drift = (
         "\n".join(f"- {e}" for e in errors)
         if errors
@@ -379,11 +380,11 @@ codebase — say so rather than inferring requirements, and see "Not yet specced
 
 ## Code → spec
 
-{render_routes(specs, repo_root)}
+{render_routes(specs, specs_dir)}
 
 ## Spec tree
 
-{render_tree(specs, repo_root)}
+{render_tree(specs, specs_dir)}
 
 ## Drift
 
@@ -418,7 +419,7 @@ def main() -> int:
     specs, parse_errors = load_specs(specs_dir)
     validation_errors, gaps = validate(specs, repo_root, specs_dir)
     errors = parse_errors + validation_errors
-    index_content = render_index(specs, errors, gaps, repo_root)
+    index_content = render_index(specs, errors, gaps, specs_dir)
 
     index_path = specs_dir / "INDEX.md"
     old_index = index_path.read_text(encoding="utf-8") if index_path.exists() else ""
