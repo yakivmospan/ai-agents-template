@@ -28,6 +28,9 @@ Detect, do not assume:
 - **Structure** — top-level source directories, skipping build output, `node_modules`, `.git`.
 - **Conventions** — skim 3-5 representative source files. Only record a convention you can point at
   actual code for. Do not import best practices this codebase does not follow.
+- **Existing documentation** — `README.md`, `docs/**`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, or
+  similar. Read these before asking Step 3's questions — a goal, non-goal, or constraint already
+  written down there is evidence to cite, not something to ask the user again.
 - **Sensitive paths** — build config, CI, migrations, signing keys, infra.
 - **Existing agent setup** — `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.codex/`, `.cursor/rules/`,
   any existing `docs/adr/` or `specs/`. All of these change what you are allowed to write.
@@ -70,8 +73,9 @@ Neither ships with the template — nothing stale to reconcile.
 - **AGENTS.md, absent** — generate from `.agents/templates/AGENTS.template.md`, filling every
   placeholder from Steps 1-3. Keep the result tight; it loads on every single session.
 - **AGENTS.md, present** — leave all existing content untouched. Append only the sections it lacks:
-  the always-on read instruction, the load-on-demand table, the spec-map section, and Working style.
-  If it already documents its own delegation or instruction-loading setup, do **not** add a second
+  the always-on read instruction and the load-on-demand table. The delegation flow itself lives in
+  `.agents/rules/always/core.md`, not in `AGENTS.md` — nothing to append for that. If the existing
+  file already documents its own delegation or instruction-loading setup, do **not** add a second
   conflicting one — flag the overlap in Step 8 and let the human consolidate.
 
 ## Step 5 — Build the specs tree
@@ -114,11 +118,9 @@ Fill only markers that are still literally `{{...}}`:
 - `.agents/rules/always/core.md` — `{{SENSITIVE_PATHS}}`.
 - `.claude/settings.json` — test, lint, build, formatter commands and source extension. If no
   formatter is configured in the repo, delete the `PostToolUse` hook rather than inventing one.
-- `.claude/agents/code-reviewer.md` **and** `.codex/agents/code-reviewer.toml` — the same checks in
-  both. These files have no shared schema; each placeholder gets filled twice with identical facts.
-- `.claude/agents/test-writer.md` **and** `.codex/agents/test-writer.toml` — same, for framework and
-  test command.
-- `architect.md` / `architect.toml` — no placeholders, leave both alone.
+- `.claude/agents/test-writer.md` **and** `.codex/agents/test-writer.toml` — same two placeholders
+  (`{{TEST_FRAMEWORK}}`, `{{TEST_COMMAND}}`) in both files; no shared schema, so fill each by hand.
+- `architect.md` / `architect.toml` / `runner.md` / `runner.toml` — no placeholders, leave alone.
 
 ## Step 7 — Link the shared skill pool and build the index
 

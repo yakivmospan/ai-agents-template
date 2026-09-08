@@ -1,9 +1,9 @@
 ---
-name: test-unit-junit5
-description: Use when writing unit tests for ViewModels, repositories, interactors, or other business logic classes in a JUnit5 (Jupiter) project — testing coroutine flows, state emissions, error handling, or mocking dependencies with mockk. Check specs/02-tech.md first: if this project actually uses JUnit4, use test-unit-junit4 instead, not this one. Do NOT use for UI/Compose rendering tests — those test the render tree, not isolated business logic, and need different tooling.
+name: test-unit
+description: Use when writing unit tests for ViewModels, repositories, interactors, or other business logic classes — testing coroutine flows, state emissions, error handling, or mocking dependencies with mockk. Covers both JUnit4 and JUnit5; check this project's actual configured test setup first to see which one it actually uses — the dispatcher setup and annotations genuinely differ between them, not just the naming. Do NOT use for UI/Compose rendering tests — those test the render tree, not isolated business logic, and need different tooling.
 ---
 
-# Test Unit — JUnit5
+# Test Unit
 
 ## Overview
 
@@ -25,10 +25,9 @@ Unit tests verify individual functions and methods in isolation. Each test cover
 | **No deprecated classes** | Unless absolutely necessary |
 | **No matchers on real objects** | Use full object comparison instead |
 | **`@VisibleForTesting`** | If private implementation is needed for testing, propose making it `internal` |
-| **Set and reset dispatcher** | Always `Dispatchers.setMain` in `@BeforeEach`, `Dispatchers.resetMain` in `@AfterEach` |
 | **Given/When/Then comments** | In every test body |
 | **When/then naming** | No camelCase, Kotlin backtick names, keep them concise |
-| **Never run tests** | In agent mode — propose to validate, run, then proceed |
+| **Running tests** | If this project delegates test-writing to a dedicated subagent, running the new tests as the last step of its job is that subagent's responsibility. Otherwise, propose running rather than running unprompted. |
 | **Full API surface coverage** | For classes with multiple public entry points that share underlying logic (e.g. `execute()` and `executionFlow()`), every behaviour — happy path, error, edge case — must be verified through each public entry point explicitly |
 | **Orchestration, not just invocation** | When a method coordinates multiple dependencies, verify it as a whole: call order (`coVerifyOrder`), *actual* data flowing between calls (not `any()`), full state-transition sequence (not just the end value), all side effects of one call asserted together in one test, and one test per failure source showing *that* failure surfaces correctly |
 
@@ -36,31 +35,109 @@ Unit tests verify individual functions and methods in isolation. Each test cover
 
 ## Tech Stack
 
-This skill assumes JUnit5, `kotlinx-coroutines-test`, `mockk`, and robolectric — confirm against
-`specs/02-tech.md`, which is the actual source of truth for this project's stack. If the framework
-there is JUnit4, use `test-unit-junit4` instead; the mechanics differ (annotations, dispatcher
-setup) even though the principles below don't.
+This skill assumes `kotlinx-coroutines-test`, `mockk`, and robolectric — confirm against this
+project's actual configured stack, including whether it's JUnit4 or JUnit5.
 
 ---
 
-## Template
+## Template — JUnit4
+
+A one-time shared rule, defined once in a test-utils source set — not repeated per test class.
+JUnit4 has no `@BeforeEach`/`@AfterEach` to hook class-wide setup into, so a `TestWatcher` rule is
+what avoids repeating `Dispatchers.setMain`/`resetMain` by hand in every class's `@Before`:
+
+```kotlin
+@ExperimentalCoroutinesApi
+class MainDispatcherRule(
+    private val dispatcher: TestDispatcher = StandardTestDispatcher()
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(dispatcher)
+    }
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
+    }
+}
+```
+
+The per-class template. `@RunWith(RobolectricTestRunner::class)` is required for Robolectric under
+JUnit4 (there's no `@ExtendWith`-style opt-in the way JUnit5 has) — drop it if a given test class
+doesn't need Robolectric:
+
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
+class ExampleTemplateTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private val testDispatcher = StandardTestDispatcher()
+    private val testScope = TestScope(testDispatcher)
+
+    // Mocked dependencies/constants/variables go here
+
+    @Before
+    fun setup() {
+        // Initialize mocked dependencies/variables here.
+        // MainDispatcherRule already called Dispatchers.setMain — don't repeat it here.
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
+        // Any additional clean ups.
+        // MainDispatcherRule already calls Dispatchers.resetMain automatically.
+    }
+
+    // If possible and suitable, create default mocks to avoid duplication
+    private fun successResult(output: ..) = {}
+    private fun failedResult(error: Throwable) = {}
+    private fun mockDefaults() {
+        every { .. } returns successResult(..)
+        every { .. } returns successResult(..)
+    }
+
+    @Test
+    fun `when all commands succeed then returns correct value`() = runTest {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    fun `when command fails then it throws exception`() = runTest {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    // Other groups follow the same logic
+}
+```
+
+## Template — JUnit5
 
 Robolectric under JUnit5 needs its Jupiter extension registered on the class — the exact
 annotation/extension class name has changed across Robolectric versions, so verify it against
-whatever version is actually in `specs/02-tech.md` rather than trusting this literally; the shape
-is right even if the exact name has moved on. Drop it entirely for a test class that doesn't need
-Robolectric.
+whatever Robolectric version this project actually has configured, rather than trusting this
+literally; the shape is right even if the exact name has moved on. Drop it entirely for a test
+class that doesn't need Robolectric:
 
 ```kotlin
 @ExtendWith(RobolectricExtension::class) // verify this class name against your Robolectric version
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExampleTemplateTest {
-    
+
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
     // Mocked dependencies/constants/variables go here
-    
+
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
@@ -73,7 +150,7 @@ class ExampleTemplateTest {
         clearAllMocks()
         // Any additional clean ups
     }
-    
+
     // If possible and suitable, create default mocks to avoid duplication
     private fun successResult(output: ..) = {}
     private fun failedResult(error: Throwable) = {}
@@ -81,7 +158,7 @@ class ExampleTemplateTest {
         every { .. } returns successResult(..)
         every { .. } returns successResult(..)
     }
-    
+
     @Test
     fun `when all commands succeed then returns correct value`() = runTest {
         // Given

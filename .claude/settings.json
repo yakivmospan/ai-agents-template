@@ -1,5 +1,4 @@
 {
-  "model": "claude-sonnet-4-6",
   "permissions": {
     "allow": [
       "Bash(git diff:*)",
@@ -28,18 +27,16 @@
       "Read(./**/*.pem)",
       "Edit(specs/INDEX.md)",
       "Bash(curl:*)"
-    ],
-    "defaultMode": "default"
+    ]
   },
   "hooks": {
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
-          { "type": "command", "command": "{{FORMATTER_COMMAND — e.g. ktlint -F, prettier --write, black}} $CLAUDE_TOOL_INPUT_FILE_PATH" }
+          { "type": "command", "command": "jq -r '.tool_input.file_path' | xargs -r {{FORMATTER_COMMAND — e.g. ktlint -F, prettier --write, black}}" }
         ]
       }
     ]
-  },
-  "includeCoAuthoredBy": false
+  }
 }

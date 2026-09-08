@@ -1,11 +1,12 @@
 # Architecture rules
 
-Read `specs/01-architecture.md` and every affected spec before proposing anything below.
+Read `specs/01-architecture.md`, `specs/02-tech.md`, and every affected spec before proposing
+anything below.
 
 | Rule | Detail |
 |---|---|
 | SOLID | Each module has one reason to change; extend via new code, not edits to an existing contract; a substitute implementation must not break callers; keep interfaces small and specific; depend on abstractions, not concrete types. |
-| Read first | `specs/01-architecture.md` and every spec whose `owns` glob overlaps the blast radius, plus the actual code — existing patterns outrank general best practice. |
+| Read first | `specs/01-architecture.md`, `specs/02-tech.md` (its Technical constraints and Development approach often bound the option space), and every spec whose `owns` glob overlaps the blast radius, plus the actual code — existing patterns outrank general best practice. |
 | A proposal needs | At least two approaches with concrete tradeoffs (migration cost, testability, blast radius), and which specs would change, by id. |
 | Boundary or build changes → stop | Flag explicitly, need human sign-off. |
 | Record cross-cutting decisions | In `specs/01-architecture.md`'s Decisions section. |

@@ -21,9 +21,9 @@ conversation* not yet written into any file.
 
 - **If this repo has a `specs/` tree**: identify which specs actually matter to what was being
   worked on — check `specs/INDEX.md` for anything code-related, or just the specs that came up in
-  conversation. Attach those files directly (`present_files`, if available) instead of describing
-  their contents. Don't attach the whole tree indiscriminately — just what's relevant, so the user
-  can drag-and-drop exactly what's needed and nothing else.
+  conversation. Attach those files directly instead of describing their contents. Don't attach the
+  whole tree indiscriminately — just what's relevant, so the user can drag-and-drop exactly what's
+  needed and nothing else.
 - **Any other file discussed or produced in the conversation** — source files, contracts,
   documents, diagrams — same treatment: name it and attach it rather than inlining it.
 - If nothing produced or discussed exists as a file yet, there's nothing to attach — that's fine,
@@ -85,9 +85,9 @@ Adapt section names to fit the domain — this skeleton is a default, not a rigi
 
 ## After writing
 
-1. Present the snapshot file together with every attached file in the same step (`present_files`
-   with all of them, if available) — the point is the user gets everything to drag-and-drop in one
-   place, not just the snapshot with a list of paths they still have to go find themselves.
+1. Present the snapshot file together with every attached file in the same step, using whatever
+   attachment mechanism the current tool provides — the point is the user gets everything to
+   drag-and-drop in one place, not just the snapshot with a list of paths to go find themselves.
 2. Keep the chat reply short: don't restate the snapshot's contents in prose. A one-line
    confirmation plus the files is enough. If mid-session, add a one-line reminder that the user can
    keep working here, or pick up fresh from the files later — their call.

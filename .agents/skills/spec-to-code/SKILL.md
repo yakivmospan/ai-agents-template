@@ -29,8 +29,8 @@ change yet.
    match existing patterns, don't introduce a new style for just this change.
 3. If satisfying a criterion requires a real design decision (more than one reasonable approach,
    meaningful tradeoffs, or touches a module boundary), delegate to the `architect` agent first
-   rather than picking an approach unilaterally — this mirrors AGENTS.md's own Working style rule,
-   it isn't a special case invented for this skill.
+   rather than picking an approach unilaterally — this mirrors `core.md`'s own flow, it isn't a
+   special case invented for this skill.
 4. If the spec has open questions that block a specific criterion, don't resolve them yourself by
    picking an interpretation. Implement what isn't blocked, and report the rest as blocked on that
    open question — same principle as `spec-from-code`: an agent doesn't get to silently settle a
@@ -40,10 +40,9 @@ change yet.
 
 - Work criterion by criterion where practical — it keeps the diff reviewable and makes "is this
   criterion actually done" a concrete, checkable question rather than a vague judgment call later.
-- After any non-trivial change, delegate to `code-reviewer` before considering it done — again, this
-  is just AGENTS.md's existing Working style rule, not a new one.
 - When the change adds public surface, delegate to `test-writer`, pointing it at the specific
-  acceptance criteria it should turn into tests.
+  acceptance criteria it should turn into tests — again, this is just `core.md`'s existing flow,
+  not a new rule.
 
 ## After implementing
 

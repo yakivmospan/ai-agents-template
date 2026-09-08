@@ -16,6 +16,4 @@ sandbox_mode = "workspace-write"
 network_access = false
 
 [agents]
-max_threads = 4
-max_depth = 1
-# job_max_runtime_seconds = 1800  # uncomment to override the per-worker timeout
+max_concurrent_threads_per_session = 4

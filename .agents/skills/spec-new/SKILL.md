@@ -7,7 +7,9 @@ description: Create a new spec under specs/ with correct frontmatter, parent lin
 
 ## Before writing anything
 
-1. Read `.agents/rules/always/specs.md` if it is not already in context.
+1. Read `.agents/rules/always/specs.md` if it is not already in context, and `specs/00-brief.md`
+   for the project's Non-goals — a new spec that contradicts one of them is a flag to raise with
+   the user, not something to write as asked.
 2. Read `specs/INDEX.md`. Check the thing you are about to spec does not already have one under a
    different name — extending an existing spec beats adding a near-duplicate.
 3. Decide the parent. Default is `architecture` for a standalone feature. A feature that

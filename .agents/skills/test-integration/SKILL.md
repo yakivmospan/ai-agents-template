@@ -1,6 +1,6 @@
 ---
 name: test-integration
-description: Use when writing integration tests across any software architecture layer (backends, mobile apps, desktop systems, service modules) — verifying data flowing across components, persistent storage updates, reactive event streams or message brokers, asynchronous thread boundaries, or replacing brittle mocks with fakes. Do NOT use for isolated class unit tests — use test-unit-junit4 or test-unit-junit5 instead (whichever matches specs/02-tech.md).
+description: Use when writing integration tests across any software architecture layer (backends, mobile apps, desktop systems, service modules) — verifying data flowing across components, persistent storage updates, reactive event streams or message brokers, asynchronous thread boundaries, or replacing brittle mocks with fakes. Do NOT use for isolated class unit tests — use test-unit instead.
 ---
 
 # Test Integration
@@ -25,14 +25,14 @@ Integration tests verify that two or more concrete architectural components inte
 | **No Backdoors or Reflection** | Drive system state changes strictly via public APIs, shared fakes, or explicit execution triggers. Testing structures must not rely on private internal references. |
 | **Given/When/Then Comments** | In every integration test body to clearly mark configuration, execution, and state assertions. |
 | **When/Then Naming** | Use descriptive, concise names capturing the architectural integration behavior and structural changes being checked. |
-| **Never Run Tests** | In agent mode — validate the script and structural accuracy, then propose to execute. |
+| **Running tests** | If this project delegates test-writing to a dedicated subagent, running the new tests as the last step of its job is that subagent's responsibility. Otherwise, propose running rather than running unprompted. |
 
 ---
 
 ## Tech Stack
 
-See `specs/02-tech.md` for what this project actually uses — this skill doesn't claim a specific
-framework. The template below is written with JUnit5-style annotations (`@BeforeEach`/`@AfterEach`)
+Check this project's actual configured stack for what it uses — this skill doesn't claim a
+specific framework. The template below is written with JUnit5-style annotations (`@BeforeEach`/`@AfterEach`)
 as a concrete illustration; adapt the annotations to match the real framework (JUnit4's
 `@Before`/`@After`, pytest fixtures, Jest's `beforeEach`) — the principles in the table above are
 what actually matters and don't change with the annotation syntax.

@@ -1,6 +1,6 @@
 ---
 name: spec-from-code
-description: Bring a spec's content back in line with code that was changed by hand without the spec being updated. Use when explicitly asked to "update the spec", "sync the spec with the code", "the spec is stale, fix it", or when following up on a code-reviewer finding. Code is ground truth, spec changes. Opposite direction from spec-to-code. This is judgment work (reading code, deciding what it now means) — not the structural check spec-sync does.
+description: Bring a spec's content back in line with code that was changed by hand without the spec being updated. Use when explicitly asked to "update the spec", "sync the spec with the code", or "the spec is stale, fix it". Code is ground truth, spec changes. Opposite direction from spec-to-code. This is judgment work (reading code, deciding what it now means) — not the structural check spec-sync does.
 ---
 
 # Spec From Code
@@ -8,10 +8,9 @@ description: Bring a spec's content back in line with code that was changed by h
 Reconciles spec content to match code that changed underneath it. The direction is code → spec:
 the code is being treated as ground truth, and the spec's prose is what gets rewritten.
 
-Only run this on direct request, or as the explicit follow-through on a code-reviewer finding the
-user has already asked you to act on. Don't rewrite a spec's content on your own initiative just
-because you happened to notice a mismatch while doing something else — flag it instead, the same
-way `code-reviewer` does, and let the user decide whether now is the time.
+Only run this on direct request. Don't rewrite a spec's content on your own initiative just because
+you happened to notice a mismatch while doing something else — flag the mismatch instead, and let
+the user decide whether now is the time to reconcile it.
 
 ## Scope
 

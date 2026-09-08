@@ -20,8 +20,8 @@ updated: {{DATE}}
 | Network | {{NETWORK}} |
 
 ## Testing
-The fact, not the methodology — `.agents/rules/on-demand/testing.md` and the matching
-`test-unit-*`/`test-integration` skill own how to write a test; this is only what's configured.
+The fact, not the methodology — the matching `test-unit`/`test-integration` skill owns how to
+write a test; this is only what's configured.
 
 | | |
 |---|---|

@@ -6,7 +6,8 @@ A template repo for running Claude Code and Codex CLI over the same project, wit
 - **A shared rules pool** — `.agents/rules/`, split into always-loaded and load-on-demand.
 - **A shared skill pool** — `.agents/skills/`, read natively by Codex and symlinked for Claude.
 - **A specs tree** — `specs/`, every spec linked to its parent and to the code it owns.
-- **One setup command** — `/project-init`, which reads your actual codebase and writes the rest.
+- **One setup command** — `/project-init` (Claude) or `$project-init` (Codex), which reads your
+  actual codebase and writes the rest.
 
 Nothing here is filled in by hand. `AGENTS.md`, `CLAUDE.md`, and the whole `specs/` tree are
 generated from your repository by `/project-init`, which asks you for whatever the code cannot tell
@@ -18,14 +19,16 @@ it and leaves a placeholder rather than guessing.
 
 **New project** — on GitHub, click **Use this template → Create a new repository**. This gives you
 a normal new repo seeded from this one's contents, with no fork/upstream relationship attached —
-the standard way to start a project from a GitHub template. Clone it, open it in Claude Code, and
-run `/project-init`. Work through whatever it lists at the end under "Still needs input."
+the standard way to start a project from a GitHub template. Clone it, open it in Claude Code or
+Codex CLI — whichever you use, or both — and run `/project-init` (Claude) or `$project-init`
+(Codex). Work through whatever it lists at the end under "Still needs input."
 
-**Existing project** — copy in `.agents/`, `.claude/`, `.codex/`, `specs/`, `.mcp.json`, then run
-`/project-init` the same way. It never overwrites a file it did not write, including an
-`AGENTS.md` you already have — it only fills placeholders and appends missing sections.
+**Existing project** — copy in `.agents/`, `.claude/`, `.codex/`, `specs/`, then run `/project-init`
+or `$project-init` the same way. It never overwrites a file it did not write, including an
+`AGENTS.md` you already have — it only fills placeholders and appends missing sections. Add
+`.mcp.json` yourself only if this project actually uses an MCP server — see the MCP row below.
 
-`/project-init` links skills automatically as part of setup.
+`/project-init` (or `$project-init` on Codex) links skills automatically as part of setup.
 
 ## How the pieces fit
 
@@ -52,7 +55,6 @@ above. It looks like this:
 |---|---|
 | edit any file listed in the spec index | its owning spec (look it up, see below) |
 | write or change production code | `.agents/rules/on-demand/code-style.md` |
-| write or change tests | `.agents/rules/on-demand/testing.md` |
 | add a module, move a boundary, choose between designs | `.agents/rules/on-demand/architecture.md` |
 
 An agent about to do one of the things in the left column reads the file named in the right column
@@ -170,19 +172,27 @@ in your Codex home directory rather than the repo, so they cannot be shared thro
 
 ## Subagents
 
+There is deliberately no reviewer subagent — `.agents/rules/` already governs how every agent
+writes code, so a subagent re-reading those same rules over a diff is duplicated cost, not a
+safeguard. The three that exist each hand off work that would otherwise dump raw, disposable
+context (design comparisons, test-writing detail, command output) into the main session.
+
 | Name | Claude | Codex | Fires on |
 |---|---|---|---|
-| `architect` | opus | gpt-5.5 | multi-file refactors, new modules, design choices |
-| `code-reviewer` / `code_reviewer` | haiku | gpt-5.3-codex-spark | any non-trivial edit, before reporting done |
-| `test-writer` / `test_writer` | haiku | gpt-5.3-codex-spark | new public surface |
+| `architect` | opus | gpt-5.5, high effort | multi-file refactors, new modules, design choices |
+| `test-writer` / `test_writer` | sonnet | gpt-5.5, medium effort | new or changed public surface |
+| `runner` | haiku | gpt-5.3-codex-spark, low effort | running the build/lint/test command and reporting only failures |
 
-All three are spec-aware: the architect reads the affected specs before proposing and records
-binding decisions in whichever spec they belong to, the reviewer checks the diff against the
-owning spec (and flags a spec that should have changed but did not), and the test-writer derives
-its cases from the spec's acceptance criteria.
+The architect and test-writer are spec-aware: the architect reads the affected specs before
+proposing and writes its decision directly into whichever spec it belongs to, and the test-writer
+derives its cases from the owning spec's acceptance criteria. `runner` is not spec-aware — its job
+is mechanical (run one command, report failures), which is exactly the kind of small, local task a
+cheap model is right for; test-writing gets a stronger model on purpose, since a shallow test is a
+false signal, not a shortcut.
 
 "Fires on" describes Claude. On Codex the same rows describe what the *main session has been
-instructed to delegate for* — see Gotchas.
+instructed to delegate for* — see Gotchas. The full flow (spec lookup → architect → implement →
+test-writer → runner → spec update) is written once, in `.agents/rules/always/core.md`, not here.
 
 ## Claude ↔ Codex compatibility
 
@@ -193,13 +203,17 @@ instructed to delegate for* — see Gotchas.
 | Skills | `.claude/skills/` | `.agents/skills/` | yes, via symlink |
 | Subagents | `.claude/agents/*.md` | `.codex/agents/*.toml` | no shared schema — sync by hand |
 | Permissions | `permissions.allow/ask/deny` | `approval_policy` + `sandbox_mode` | no — sync by hand |
-| MCP | `.mcp.json` | per-agent `[mcp_servers.*]` | protocol yes, pointer file no |
+| MCP | `.mcp.json`, if this project uses one | per-agent `[mcp_servers.*]` | protocol yes, pointer file no |
 
 ## Gotchas
 
-- **Codex never delegates on its own.** A matching `description` alone does nothing. If AGENTS.md's
-  Working style bullets are phrased as trigger conditions instead of direct instructions, the
+- **Codex never delegates on its own.** A matching `description` alone does nothing — the main
+  session has to explicitly ask for a subagent every time. `core.md`'s flow is written as direct
+  instructions for exactly this reason; phrasing it as trigger conditions instead means the
   subagents simply never get used and nothing tells you.
+- **`includeCoAuthoredBy` is deprecated.** `.claude/settings.json` no longer sets it. Use the
+  `attribution` setting instead if you want to change or hide commit/PR attribution — see Claude
+  Code's settings reference for its current shape before adding it.
 - **`specs/INDEX.md` is generated.** Editing it by hand works until the next `spec-sync` run
   silently discards your edit. It is in the `deny` list in `.claude/settings.json` for that reason.
 - **A file with two equally-specific owners is a bug**, not a tie to break. `spec-sync` reports it.
@@ -222,8 +236,9 @@ The two things that rot fastest, worth knowing rather than a checklist to run th
 1. **Specs vs. code, structurally.** `python3 .agents/skills/spec-sync/scripts/build_index.py
    --check` exits non-zero on drift — wire it into CI or a pre-commit hook and an unowned directory
    or a dangling `owns` glob fails loudly instead of quietly. This only catches structure (globs,
-   ownership), not content — `code-reviewer` is what flags when a spec's *content* should have
-   changed alongside the code and didn't; `spec-from-code` is what you run to actually fix that.
+   ownership), not content — noticing that a spec's *content* should have changed alongside the
+   code and didn't is a reading-and-judgment call for whoever reviews the diff; `spec-from-code` is
+   what you run to actually fix that once noticed.
 2. **The hand-synced pairs.** `.claude/settings.json` ↔ `.codex/config.toml`, and each
    `.claude/agents/*.md` ↔ `.codex/agents/*.toml`. No shared schema, no tooling. Update both in the
    same commit when you tune one.
