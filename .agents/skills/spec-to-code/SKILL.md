@@ -49,9 +49,11 @@ change yet.
 1. Check off each acceptance criterion that is now genuinely satisfied — verified by the tests
    `test-writer` produced or by your own inspection, not checked speculatively because the code
    "should" work.
-2. Update the spec's `updated:` date. If every criterion is now checked and reviewed, consider
+2. If this work was ticket-driven, add a row to the spec's Change history (create the section if
+   it doesn't exist yet) naming the ticket and what changed.
+3. Update the spec's `updated:` date. If every criterion is now checked and reviewed, consider
    whether `status` should move from `draft` to `active` — but leave it as-is if anything remains
    unverified or open.
-3. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
-4. Report what was implemented, what got checked off, and anything left blocked on an open question
+4. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
+5. Report what was implemented, what got checked off, and anything left blocked on an open question
    or a design decision still pending human sign-off.

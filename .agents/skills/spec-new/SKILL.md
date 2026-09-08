@@ -1,6 +1,6 @@
 ---
 name: spec-new
-description: Create a new spec under specs/ with correct frontmatter, parent link, and code ownership glob, then rebuild the index. Use when adding a feature that has no spec, when a piece of work spans multiple modules and needs a story-level contract first, or when a task touches an area of an existing codebase that has no spec yet.
+description: Create a new spec under specs/ with correct frontmatter, parent link, and code ownership glob, then rebuild the index. Use when adding a feature that has no spec, when a piece of work spans multiple modules and needs a contract-level agreement first, or when a task touches an area of an existing codebase that has no spec yet.
 ---
 
 # Spec New
@@ -12,47 +12,54 @@ description: Create a new spec under specs/ with correct frontmatter, parent lin
    the user, not something to write as asked.
 2. Read `specs/INDEX.md`. Check the thing you are about to spec does not already have one under a
    different name — extending an existing spec beats adding a near-duplicate.
-3. Decide the parent. Default is `architecture` for a standalone feature. A feature that
+3. If the work plausibly spans more than one module, or which module owns what is itself a real
+   design decision, delegate to the `architect` subagent first and use its decision — don't infer
+   the module split yourself from a ticket or conversation alone. A ticket describes what a
+   feature should do; it says nothing about how the code is or should be organized, and guessing
+   that from text alone is exactly the mistake this step exists to prevent.
+4. Decide the parent. Default is `architecture` for a standalone feature. A feature that
    is genuinely a sub-part of another feature parents to that feature instead. A feature that is
-   one module of a larger multi-module piece of work parents to that work's story spec.
-4. If this is one piece of a larger effort spanning multiple modules, check whether a story spec
-   already exists for it before creating a feature spec in isolation — see "Stories" below.
+   one module of a larger multi-module piece of work parents to that work's contract spec.
+5. If this is one piece of a larger effort spanning multiple modules, check whether a contract spec
+   already exists for it before creating a feature spec in isolation — see "Contracts" below.
 
 ## Pick a template
 
 | Situation | Template | Destination |
 |---|---|---|
 | New feature or module | `.agents/templates/spec-feature.md` | `specs/features/<slug>.md` |
-| Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-story.md` | `specs/stories/<slug>.md` |
+| Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-contract.md` | `specs/contracts/<slug>.md` |
 
 Copy it, do not write from memory — the frontmatter contract has required keys.
 
 A binding technical decision isn't a separate spec — record it in the Decisions section of
-whichever spec it affects (the feature/story it's scoped to, or `01-architecture.md` if it's
+whichever spec it affects (the feature/contract it's scoped to, or `01-architecture.md` if it's
 cross-cutting). See "Fill it" below.
 
-## Stories
+## Contracts
 
-Only reach for `spec-story.md` when work genuinely fans out across multiple modules — most work is
-a single feature spec. Story mechanics (`owns: []`, the `Implementation` table, the size-judgment
-for whether a task gets its own file) are in the "Stories" row of `.agents/rules/always/specs.md`'s
-Writing table — don't re-derive them here.
+Only reach for `spec-contract.md` when work genuinely fans out across multiple modules — most work
+is a single feature spec. Contract mechanics (`owns: []`, the `Implementation` table, the
+size-judgment for whether a task gets its own file) are in the "Contracts" row of
+`.agents/rules/always/specs.md`'s Writing table — don't re-derive them here.
 
 ## Fill it
 
-- `id` — dot-namespaced and unique: `feature.<slug>` or `story.<slug>`.
+- `id` — dot-namespaced and unique: `feature.<slug>` or `contract.<slug>`.
 - `owns` — the glob(s) this spec is the source of truth for. **Verify each glob actually matches
   files on disk before saving.** If the code does not exist yet, use `owns: []` and add the glob in
-  the same commit that adds the code. Story specs always keep `owns: []`.
+  the same commit that adds the code. Contract specs always keep `owns: []`.
 - `jira` — the source ticket key, if one exists. Optional; delete the field entirely rather than
   leaving the placeholder if there isn't one.
 - `status` — `draft` until the behaviour it describes is implemented and tested.
 - Acceptance criteria — full Given/When/Then per criterion, not a one-line summary. A criterion
   that can't be written this way usually means the requirement itself is still vague — surface
   that rather than writing a vaguer version to paper over it.
-- `Implements` (feature specs that are part of a story only) — name which of the parent story's
-  AC ids this module satisfies. Don't repeat the story's Given/When/Then here.
+- `Implements` (feature specs that are part of a contract only) — name which of the parent
+  contract's AC ids this module satisfies. Don't repeat the contract's Given/When/Then here.
 - `Solution` and `References` — leave these for after implementation; don't fill them with a plan.
+- `Change history` — leave it out entirely on a brand-new spec; add it the first time a change
+  lands after creation, ticket-driven or not (see `.agents/rules/always/specs.md`).
 - Decisions — record any choice that constrains future work in the spec's own Decisions section,
   with the rejected alternative and why. A decision that isn't scoped to this spec (it affects
   other features too) belongs in `01-architecture.md`'s Decisions section instead.

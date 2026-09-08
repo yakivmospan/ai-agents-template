@@ -13,13 +13,13 @@ updated: {{DATE}}
 # {{FEATURE_NAME}}
 
 <!--
-  If this feature is one piece of a larger multi-module story, delete this comment and fill in
+  If this feature is one piece of a larger multi-module contract, delete this comment and fill in
   "Implements" below. If it's standalone, delete the whole "Implements" section instead — don't
   leave it as a placeholder nobody filled in.
 -->
 
 ## Implements
-Part of `story.{{PARENT_STORY_SLUG}}` — satisfies AC-{{N}}, AC-{{M}} from that story's contract.
+Part of `contract.{{PARENT_CONTRACT_SLUG}}` — satisfies AC-{{N}}, AC-{{M}} from that contract.
 See that spec for the full product-level Given/When/Then; this section only needs to say *which*
 of those this module is responsible for, not repeat them.
 
@@ -68,6 +68,16 @@ so someone with zero context could implement or verify it from this text alone.
 {{Pointers to documentation that already lives elsewhere — a module's own README, a design doc, a
   Confluence page — so it isn't duplicated here. e.g. "`modules/{{name}}/README.md` — API surface
   reference."}}
+
+## Change history
+<!-- Optional — add this section the first time a change happens after the spec is first written.
+     Don't ship it as an empty stub on a brand-new spec. -->
+Every change to this spec's behavior after it was first written — ticket-driven or not. `jira:`
+above is only the origin ticket, if there was one. Add a row, never overwrite one.
+
+| Ticket | Change | Date |
+|---|---|---|
+| {{ticket key, or "No ticket" if there wasn't one}} | {{what changed}} | {{DATE}} |
 
 ## Decisions
 - **{{decision}}** — {{why}}. Rejected: {{alternative}}, because {{reason}}.

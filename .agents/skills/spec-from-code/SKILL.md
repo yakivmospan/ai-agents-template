@@ -54,9 +54,12 @@ Figure out what's in scope before touching anything:
 
 ## After reconciling
 
-1. Update the spec's `updated:` date. Reconsider `status` — a spec that now accurately describes
+1. Add a row to the spec's Change history (create the section if it doesn't exist yet) — the
+   Ticket column is whatever drove this reconciliation, or literally "No ticket" when it was a
+   direct request with none.
+2. Update the spec's `updated:` date. Reconsider `status` — a spec that now accurately describes
    fully-implemented, tested behaviour can move from `draft` to `active`; don't do this
    automatically if there are still open questions or unverified criteria.
-2. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
-3. Report concisely: what was updated, what was flagged rather than resolved (constraints, dropped
+3. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
+4. Report concisely: what was updated, what was flagged rather than resolved (constraints, dropped
    requirements, ambiguous resolutions), and why each flagged item wasn't just fixed silently.

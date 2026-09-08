@@ -1,15 +1,15 @@
 ---
-id: story.{{SLUG}}
-title: {{STORY_NAME}}
+id: contract.{{SLUG}}
+title: {{CONTRACT_NAME}}
 parent: architecture
 status: active
 owns: []
-jira: {{JIRA_STORY_KEY}}
+jira: {{JIRA_CONTRACT_KEY}}
 related: []
 updated: {{DATE}}
 ---
 
-# {{STORY_NAME}}
+# {{CONTRACT_NAME}}
 
 <!--
   Use this template only when one piece of work fans out across multiple modules/features and
@@ -17,10 +17,10 @@ updated: {{DATE}}
   (or lost) across each module's own spec. If a task is scoped to a single module, it doesn't
   need this tier — just write a normal feature spec (spec-feature.md) directly.
 
-  `owns: []` is deliberate — a story never owns code directly. Every code path is owned by one
+  `owns: []` is deliberate — a contract never owns code directly. Every code path is owned by one
   of the feature specs underneath it (see the Implementation table below). If you find yourself
   wanting to add a glob here, that's a sign the work should probably just be a feature spec
-  instead of a story.
+  instead of a contract.
 -->
 
 ## Source
@@ -46,7 +46,7 @@ months.
   When {{trigger}}
   Then {{observable outcome}}
 
-<!-- Add as many as the story actually has. Don't compress multiple scenarios into one AC to
+<!-- Add as many as the contract actually has. Don't compress multiple scenarios into one AC to
      make the list shorter — that's exactly the compression that makes an AC unimplementable. -->
 
 ## Implementation
@@ -59,21 +59,34 @@ by reading every feature spec underneath.
 | `feature.{{slug}}` | new: `{{path}}` | AC-1, AC-2 |
 | `feature.{{slug}}` | existing: `{{path}}` | AC-3, AC-4 |
 
-Not every piece of work under a story needs its own row here in the form of a separate spec file.
-When a task is small enough, fold it straight into the feature spec it belongs to instead —
+Not every piece of work under a contract needs its own row here in the form of a separate spec
+file. When a task is small enough, fold it straight into the feature spec it belongs to instead —
 add it as another acceptance criterion there, with a one-line note on which ticket it came from,
 rather than creating a whole new file for it. Give it its own child spec (`parent:` pointing at
-this story, or at the feature spec it's really part of) only once it's substantial enough to
+this contract, or at the feature spec it's really part of) only once it's substantial enough to
 warrant being found on its own — its own module, its own meaningfully separate set of criteria,
 or its own review cycle. There's no fixed threshold for this; it's a size judgment made at
 architecting time, not a rule this template enforces.
 
+A module referenced here doesn't have to belong to this contract structurally — its own `parent`
+can point at `architecture` directly if it's a shared component other contracts also rely on (an
+API surface, a wire contract). This table tracks which contract's work touched a module, not who
+owns it architecturally; those are different questions.
+
+## Change history
+Every change to this contract's Acceptance criteria after it was first written — ticket-driven or
+not. `jira:` above is only the origin ticket, if there was one. Add a row, never overwrite one.
+
+| Ticket | Change | Date |
+|---|---|---|
+| {{ticket key, or "No ticket" if there wasn't one}} | {{what changed}} | {{DATE}} |
+
 ## Decisions
-Choices made while architecting this story that constrain how the modules underneath implement
+Choices made while architecting this contract that constrain how the modules underneath implement
 it — which modules exist at all, how they divide responsibility, shared contracts between them.
 A decision scoped to just one module's internals belongs in that module's own feature spec instead.
 - **{{decision}}** — {{why}}. Rejected: {{alternative}}, because {{reason}}.
 
 ## Open questions
-- [ ] {{anything not yet resolved at the story level — module-specific unknowns belong in that
+- [ ] {{anything not yet resolved at the contract level — module-specific unknowns belong in that
   module's own feature spec instead}}

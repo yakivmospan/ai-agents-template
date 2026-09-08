@@ -104,7 +104,7 @@ For each feature spec:
 If the repo already has specs, ADRs, or design docs elsewhere, do not migrate them silently. List
 them in Step 8 with a proposed destination and let the human decide.
 
-Don't create story specs during bootstrap — that's a judgment call for new work, not something to
+Don't create contract specs during bootstrap — that's a judgment call for new work, not something to
 infer from existing structure. Leave it to `spec-new` later; bootstrap only needs the feature tier.
 
 ## Step 6 — Fill the placeholder files

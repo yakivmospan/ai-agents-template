@@ -77,7 +77,7 @@ specs/
 ├── 00-brief.md         root — goal, users, non-goals, constraints
 ├── 01-architecture.md  components and boundaries
 ├── 02-tech.md          stack, libraries, setup
-├── stories/            optional — multi-module work, see below
+├── contracts/          optional — multi-module work, see below
 └── features/           one per feature, each owning a code glob
 ```
 
@@ -97,17 +97,26 @@ Every spec that has one carries its own `Decisions` section — what was decided
 rejected — scoped to whatever that spec owns. A decision that isn't scoped to one feature belongs
 in `01-architecture.md`'s Decisions section instead.
 
-**Stories** (`specs/stories/`) are for the case where one piece of work fans out across several
-modules — the full product-level Given/When/Then lives once, in the story, and each module's
+**Contracts** (`specs/contracts/`) are for the case where one piece of work fans out across several
+modules — the full product-level Given/When/Then lives once, in the contract, and each module's
 feature spec references which criteria it satisfies via an `Implements` section rather than
-repeating them. Most work doesn't need this tier; use it only when a single feature spec would
-mean either duplicating the contract across files or losing it entirely. Whether a given task
-under a story gets its own feature-spec file or just folds into an existing one as another
-criterion is a size call made at architecting time — see `.agents/rules/always/specs.md`.
+repeating them. (Deliberately not called "stories" — Jira's Story issue type is usually a single,
+smaller unit of work, while this tier is scoped more like a Jira Epic: a shared agreement spanning
+several modules. Reusing "story" would collide with that and mislead.) Most work doesn't need this
+tier; use it only when a single feature spec would mean either duplicating the contract across
+files or losing it entirely. Whether a given task under a contract gets its own feature-spec file
+or just folds into an existing one as another criterion is a size call made at architecting time —
+see `.agents/rules/always/specs.md`. A module referenced in a contract's Implementation table
+doesn't have to be that contract's structural child — a shared component other contracts also rely
+on (an API surface, a wire contract) can have `parent: architecture` directly; the table only
+tracks which contract's work touched it, not who owns it architecturally.
 
-Specs also carry an optional `jira:` frontmatter field — a pointer to the source ticket, visible
-when you open the spec, not a synced mirror. Ticket status and spec `status` deliberately stay
-separate; see the `jira:` row in `.agents/rules/always/specs.md`'s Writing table for why.
+Specs also carry an optional `jira:` frontmatter field — a pointer to the spec's origin ticket,
+visible when you open the spec, not a synced mirror. Ticket status and spec `status` deliberately
+stay separate; see the `jira:` row in `.agents/rules/always/specs.md`'s Writing table for why. A
+spec that changes again later — because of a new ticket, or with no ticket at all (a hotfix, a
+`spec-from-code` reconciliation) — gets a row in its own `Change history` section rather than
+overwriting `jira:`, which only ever points at the spec's original ticket.
 
 Each spec's own `status` field and checkboxes are the source of truth for its state, and
 `INDEX.md` tells you which spec owns which code — open the spec to see where it actually stands.

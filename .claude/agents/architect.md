@@ -17,7 +17,7 @@ When invoked:
 4. Compare at least two approaches with concrete tradeoffs: migration cost, testability, blast
    radius, and which specs each would invalidate (by id).
 5. Write the decision directly into the Decisions section of whichever spec it belongs to — the
-   feature or story spec if it's scoped there, `01-architecture.md` if it's cross-cutting:
+   feature or contract spec if it's scoped there, `01-architecture.md` if it's cross-cutting:
    recommendation, why, what it touches, and which other specs now need updating. Do not leave a
    binding decision living only in chat.
 
