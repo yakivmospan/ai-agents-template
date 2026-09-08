@@ -19,8 +19,8 @@ conversation* not yet written into any file.
 
 ## Which files to attach
 
-- **If this repo has a `specs/` tree**: identify which specs actually matter to what was being
-  worked on — check `specs/INDEX.md` for anything code-related, or just the specs that came up in
+- **If this repo has a `.specs/` tree**: identify which specs actually matter to what was being
+  worked on — check `.specs/INDEX.md` for anything code-related, or just the specs that came up in
   conversation. Attach those files directly instead of describing their contents. Don't attach the
   whole tree indiscriminately — just what's relevant, so the user can drag-and-drop exactly what's
   needed and nothing else.
@@ -67,7 +67,7 @@ Always a markdown file, not inline chat text.
 [1-2 sentences]
 
 ## Attached
-- `specs/features/checkout.md` — the spec being worked on
+- `.specs/features/checkout.md` — the spec being worked on
 - `src/checkout/pay.ts` — [why this one, if not obvious]
 
 ## Decisions made this conversation (not yet in a spec)

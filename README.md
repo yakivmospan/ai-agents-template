@@ -5,11 +5,11 @@ A template repo for running Claude Code and Codex CLI over the same project, wit
 - **One instruction file** — `AGENTS.md`, the entry point, kept short.
 - **A shared rules pool** — `.agents/rules/`, split into always-loaded and load-on-demand.
 - **A shared skill pool** — `.agents/skills/`, read natively by Codex and symlinked for Claude.
-- **A specs tree** — `specs/`, every spec linked to its parent and to the code it owns.
+- **A specs tree** — `.specs/`, every spec linked to its parent and to the code it owns.
 - **One setup command** — `/project-init` (Claude) or `$project-init` (Codex), which reads your
   actual codebase and writes the rest.
 
-Nothing here is filled in by hand. `AGENTS.md`, `CLAUDE.md`, and the whole `specs/` tree are
+Nothing here is filled in by hand. `AGENTS.md`, `CLAUDE.md`, and the whole `.specs/` tree are
 generated from your repository by `/project-init`, which asks you for whatever the code cannot tell
 it and leaves a placeholder rather than guessing.
 
@@ -23,7 +23,7 @@ the standard way to start a project from a GitHub template. Clone it, open it in
 Codex CLI — whichever you use, or both — and run `/project-init` (Claude) or `$project-init`
 (Codex). Work through whatever it lists at the end under "Still needs input."
 
-**Existing project** — copy in `.agents/`, `.claude/`, `.codex/`, `specs/`, then run `/project-init`
+**Existing project** — copy in `.agents/`, `.claude/`, `.codex/`, `.specs/`, then run `/project-init`
 or `$project-init` the same way. It never overwrites a file it did not write, including an
 `AGENTS.md` you already have — it only fills placeholders and appends missing sections. Add
 `.mcp.json` yourself only if this project actually uses an MCP server — see the MCP row below.
@@ -36,7 +36,7 @@ or `$project-init` the same way. It never overwrites a file it did not write, in
 AGENTS.md                            entry point — generated, ~40 lines, loads every session
 ├─ read .agents/rules/always/*       always on — a folder you manage, not a hardcoded list
 ├─ load table (inside AGENTS.md)     →   .agents/rules/on-demand/*.md, read when a row matches
-└─ spec map                     →   specs/INDEX.md  →  the owning spec for any given file
+└─ spec map                     →   .specs/INDEX.md  →  the owning spec for any given file
 ```
 
 Three tiers, by cost:
@@ -45,7 +45,7 @@ Three tiers, by cost:
 |---|---|---|
 | Always-on | `AGENTS.md` + everything in `.agents/rules/always/` | every session |
 | Conditional | `.agents/rules/on-demand/*.md` | when the load table's condition is met |
-| Project knowledge | `specs/**` | when you touch code the spec owns |
+| Project knowledge | `.specs/**` | when you touch code the spec owns |
 
 "The load table" is a literal table inside `AGENTS.md` itself (generated from
 `.agents/templates/AGENTS.template.md`) — it's what actually implements the "Conditional" row
@@ -69,10 +69,10 @@ instruction rather than Claude's `@` import syntax.
 
 ## Specs
 
-All specs live under `specs/`. Never inside a code module — one tree, one place to look.
+All specs live under `.specs/`. Never inside a code module — one tree, one place to look.
 
 ```
-specs/
+.specs/
 ├── INDEX.md            generated — routing table: code glob → owning spec
 ├── 00-brief.md         root — goal, users, non-goals, constraints
 ├── 01-architecture.md  components and boundaries
@@ -87,8 +87,8 @@ or AI) can actually build or verify it from that text alone. See `.agents/templa
 for the exact shape.
 
 Every spec declares `parent` (its place in the tree) and `owns` (the code globs it is the source of
-truth for). `specs/INDEX.md` is built from every `owns` entry, sorted most-specific-first, so an
-agent about to edit `src/checkout/pay.ts` finds `specs/features/checkout.md` by matching the first
+truth for). `.specs/INDEX.md` is built from every `owns` entry, sorted most-specific-first, so an
+agent about to edit `src/checkout/pay.ts` finds `.specs/features/checkout.md` by matching the first
 row that applies — and can walk `parent` upward for wider context.
 
 That is the whole navigation mechanism: `AGENTS.md` → `INDEX.md` → the spec → its parents.
@@ -97,7 +97,7 @@ Every spec that has one carries its own `Decisions` section — what was decided
 rejected — scoped to whatever that spec owns. A decision that isn't scoped to one feature belongs
 in `01-architecture.md`'s Decisions section instead.
 
-**Contracts** (`specs/contracts/`) are for the case where one piece of work fans out across several
+**Contracts** (`.specs/contracts/`) are for the case where one piece of work fans out across several
 modules — the full product-level Given/When/Then lives once, in the contract, and each module's
 feature spec references which criteria it satisfies via an `Implements` section rather than
 repeating them. (Deliberately not called "stories" — Jira's Story issue type is usually a single,
@@ -133,7 +133,7 @@ completely normal, not a shortcut to fix later.
 
 For handing work off to somewhere with **no repo access at all** — a fresh conversation, a
 different model, a plain browser chat — that's a different problem, solved by the `session-snapshot`
-skill below, not by anything living in `specs/`.
+skill below, not by anything living in `.specs/`.
 
 ## Skills
 
@@ -168,7 +168,7 @@ skill." Nothing marks a skill as template-owned versus your own; that's a distin
 track of, not one the folder structure enforces.
 
 `session-snapshot` favors attaching real files over restating their contents — if this repo has a
-`specs/` tree, the relevant spec files get attached directly (drag-and-drop ready) rather than
+`.specs/` tree, the relevant spec files get attached directly (drag-and-drop ready) rather than
 summarized into the snapshot document, since the spec already is the full-context artifact and a
 summary of it would just be a worse copy.
 
@@ -223,7 +223,7 @@ test-writer → runner → spec update) is written once, in `.agents/rules/alway
 - **`includeCoAuthoredBy` is deprecated.** `.claude/settings.json` no longer sets it. Use the
   `attribution` setting instead if you want to change or hide commit/PR attribution — see Claude
   Code's settings reference for its current shape before adding it.
-- **`specs/INDEX.md` is generated.** Editing it by hand works until the next `spec-sync` run
+- **`.specs/INDEX.md` is generated.** Editing it by hand works until the next `spec-sync` run
   silently discards your edit. It is in the `deny` list in `.claude/settings.json` for that reason.
 - **A file with two equally-specific owners is a bug**, not a tie to break. `spec-sync` reports it.
 - **Symlinks on Windows** need Developer Mode or `git config core.symlinks true`. Without either,

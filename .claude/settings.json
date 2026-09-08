@@ -9,10 +9,10 @@
       "Bash(python3 .agents/skills/spec-sync/scripts/build_index.py:*)",
       "Bash(bash .agents/scripts/link-skills.sh)",
       "Read(**/*.{{SOURCE_EXT}})",
-      "Read(specs/**)",
+      "Read(.specs/**)",
       "Read(.agents/**)",
       "Edit(**/*.{{SOURCE_EXT}})",
-      "Edit(specs/**)"
+      "Edit(.specs/**)"
     ],
     "ask": [
       "Bash(git push:*)",
@@ -25,7 +25,7 @@
       "Read(./**/*secrets*)",
       "Read(./**/*.jks)",
       "Read(./**/*.pem)",
-      "Edit(specs/INDEX.md)",
+      "Edit(.specs/INDEX.md)",
       "Bash(curl:*)"
     ]
   },

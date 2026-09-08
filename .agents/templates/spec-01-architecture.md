@@ -11,7 +11,7 @@ updated: {{DATE}}
 
 # Architecture
 
-> This spec owns the source tree broadly. Feature specs under `specs/features/` own narrower
+> This spec owns the source tree broadly. Feature specs under `.specs/features/` own narrower
 > globs and take precedence — most specific match wins.
 
 ## Shape

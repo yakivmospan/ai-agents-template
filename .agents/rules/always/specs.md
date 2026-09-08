@@ -1,10 +1,10 @@
 # Spec rules
 
-Always in effect. How the `specs/` tree works — kept short since it loads every session.
+Always in effect. How the `.specs/` tree works — kept short since it loads every session.
 
 ## Layout
 ```
-specs/
+.specs/
 ├── INDEX.md            routing table: code-path glob → owning spec (generated)
 ├── 00-brief.md         root spec, no parent
 ├── 01-architecture.md  parent: 00-brief

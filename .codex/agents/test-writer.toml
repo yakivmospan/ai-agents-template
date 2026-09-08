@@ -13,7 +13,7 @@ formality — write them at the same quality bar as production code, not the fas
 compiles.
 
 When invoked:
-1. Find the owning spec via `specs/INDEX.md`. Its acceptance criteria are your checklist — each
+1. Find the owning spec via `.specs/INDEX.md`. Its acceptance criteria are your checklist — each
    one is a named Given/When/Then; write one test per criterion, deriving the assertion directly
    from its Then/And clauses rather than guessing at what the criterion implies.
 2. Cover success, failure, and at least one edge case beyond the listed criteria.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild specs/INDEX.md from spec frontmatter, and report drift.
+"""Rebuild .specs/INDEX.md from spec frontmatter, and report drift.
 
 Stdlib only — no pyyaml, no install step. Handles the subset of YAML the spec
 frontmatter contract uses: scalars, inline lists, and block lists.
@@ -27,10 +27,12 @@ from pathlib import Path
 
 # Directories never reported as "unowned". Build output, tooling, and the agent setup itself.
 # Skipping only affects unowned-reporting — routing is unaffected either way.
+# .specs, .agents, .claude, .codex are dot-prefixed and already excluded by the dotdir check below;
+# listed anyway for readability, since a reader shouldn't have to know that fact to trust this set.
 SKIP_DIRS = {
     ".git", "node_modules", "build", "dist", "out", "target", "vendor",
     ".gradle", ".idea", "__pycache__", ".venv", "venv", ".next", ".mypy_cache",
-    ".pytest_cache", "coverage", ".agents", ".claude", ".codex", "specs",
+    ".pytest_cache", "coverage", ".agents", ".claude", ".codex", ".specs",
 }
 
 
@@ -401,7 +403,7 @@ of how complete the specs tree is, and are what `--check` fails on.
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--specs-dir", default="specs")
+    parser.add_argument("--specs-dir", default=".specs")
     parser.add_argument("--repo-root", default=".")
     parser.add_argument("--check", action="store_true", help="exit 1 on drift or stale files")
     args = parser.parse_args()

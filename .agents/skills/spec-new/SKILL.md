@@ -1,16 +1,16 @@
 ---
 name: spec-new
-description: Create a new spec under specs/ with correct frontmatter, parent link, and code ownership glob, then rebuild the index. Use when adding a feature that has no spec, when a piece of work spans multiple modules and needs a contract-level agreement first, or when a task touches an area of an existing codebase that has no spec yet.
+description: Create a new spec under .specs/ with correct frontmatter, parent link, and code ownership glob, then rebuild the index. Use when adding a feature that has no spec, when a piece of work spans multiple modules and needs a contract-level agreement first, or when a task touches an area of an existing codebase that has no spec yet.
 ---
 
 # Spec New
 
 ## Before writing anything
 
-1. Read `.agents/rules/always/specs.md` if it is not already in context, and `specs/00-brief.md`
+1. Read `.agents/rules/always/specs.md` if it is not already in context, and `.specs/00-brief.md`
    for the project's Non-goals — a new spec that contradicts one of them is a flag to raise with
    the user, not something to write as asked.
-2. Read `specs/INDEX.md`. Check the thing you are about to spec does not already have one under a
+2. Read `.specs/INDEX.md`. Check the thing you are about to spec does not already have one under a
    different name — extending an existing spec beats adding a near-duplicate.
 3. If the work plausibly spans more than one module, or which module owns what is itself a real
    design decision, delegate to the `architect` subagent first and use its decision — don't infer
@@ -27,8 +27,8 @@ description: Create a new spec under specs/ with correct frontmatter, parent lin
 
 | Situation | Template | Destination |
 |---|---|---|
-| New feature or module | `.agents/templates/spec-feature.md` | `specs/features/<slug>.md` |
-| Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-contract.md` | `specs/contracts/<slug>.md` |
+| New feature or module | `.agents/templates/spec-feature.md` | `.specs/features/<slug>.md` |
+| Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-contract.md` | `.specs/contracts/<slug>.md` |
 
 Copy it, do not write from memory — the frontmatter contract has required keys.
 

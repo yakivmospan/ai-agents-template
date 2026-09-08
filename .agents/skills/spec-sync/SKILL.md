@@ -1,11 +1,11 @@
 ---
 name: spec-sync
-description: Rebuild specs/INDEX.md from spec frontmatter and report drift. Use after creating, moving, renaming, or deleting any spec, after moving or deleting code that a spec's `owns` glob points at, and whenever INDEX.md looks stale or a file's owning spec cannot be found.
+description: Rebuild .specs/INDEX.md from spec frontmatter and report drift. Use after creating, moving, renaming, or deleting any spec, after moving or deleting code that a spec's `owns` glob points at, and whenever INDEX.md looks stale or a file's owning spec cannot be found.
 ---
 
 # Spec Sync
 
-`specs/INDEX.md` is generated. Never hand-edit it — regenerate it.
+`.specs/INDEX.md` is generated. Never hand-edit it — regenerate it.
 
 ## Run
 
@@ -18,7 +18,7 @@ pre-commit hook). Add `--repo-root <path>` if you are not at the repository root
 
 ## Then read the results
 
-The script writes two sections into `specs/INDEX.md` and prints the same to stdout/stderr:
+The script writes two sections into `.specs/INDEX.md` and prints the same to stdout/stderr:
 
 **Drift** — real problems, need a human-meaningful fix, not a suppression:
 

@@ -1,6 +1,6 @@
 ---
 name: project-init
-description: Bootstrap the whole agent setup on a repository — detect the stack, generate AGENTS.md and CLAUDE.md, create the specs/ tree from the real codebase, fill every placeholder in the rules and subagent files, and link the shared skill pool. Use once per project, on a fresh template clone or when retrofitting onto an existing codebase. Never overwrites content it did not write.
+description: Bootstrap the whole agent setup on a repository — detect the stack, generate AGENTS.md and CLAUDE.md, create the .specs/ tree from the real codebase, fill every placeholder in the rules and subagent files, and link the shared skill pool. Use once per project, on a fresh template clone or when retrofitting onto an existing codebase. Never overwrites content it did not write.
 ---
 
 # Project Init
@@ -33,7 +33,7 @@ Detect, do not assume:
   written down there is evidence to cite, not something to ask the user again.
 - **Sensitive paths** — build config, CI, migrations, signing keys, infra.
 - **Existing agent setup** — `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.codex/`, `.cursor/rules/`,
-  any existing `docs/adr/` or `specs/`. All of these change what you are allowed to write.
+  any existing `docs/adr/` or `.specs/`. All of these change what you are allowed to write.
 
 ## Step 2 — Identify candidate features
 
@@ -84,13 +84,13 @@ Copy from `.agents/templates/`, never write frontmatter from memory:
 
 | Template | Destination | Fill from |
 |---|---|---|
-| `spec-00-brief.md` | `specs/00-brief.md` | Step 3 answers 1-3 |
-| `spec-01-architecture.md` | `specs/01-architecture.md` | Step 1 structure + Step 2 features |
-| `spec-02-tech.md` | `specs/02-tech.md` | Step 1 stack and commands |
-| `spec-feature.md` | `specs/features/<slug>.md` | one per confirmed feature |
+| `spec-00-brief.md` | `.specs/00-brief.md` | Step 3 answers 1-3 |
+| `spec-01-architecture.md` | `.specs/01-architecture.md` | Step 1 structure + Step 2 features |
+| `spec-02-tech.md` | `.specs/02-tech.md` | Step 1 stack and commands |
+| `spec-feature.md` | `.specs/features/<slug>.md` | one per confirmed feature |
 
 Current status and focus for a piece of work live inside that feature spec's own `status` field
-and checkboxes — that's the only place they're tracked, and `specs/INDEX.md` is a routing table,
+and checkboxes — that's the only place they're tracked, and `.specs/INDEX.md` is a routing table,
 not a status view.
 
 For each feature spec:
@@ -112,7 +112,7 @@ infer from existing structure. Leave it to `spec-new` later; bootstrap only need
 Fill only markers that are still literally `{{...}}`:
 
 - `.agents/rules/on-demand/code-style.md` — 3-6 real conventions with code evidence, plus real anti-patterns.
-- `.agents/templates/spec-02-tech.md`'s "Testing" section (once copied to `specs/02-tech.md` in
+- `.agents/templates/spec-02-tech.md`'s "Testing" section (once copied to `.specs/02-tech.md` in
   Step 5) — framework, test command, file location, naming convention.
 - `.agents/rules/on-demand/architecture.md` — module boundary rules, if the project has modules.
 - `.agents/rules/always/core.md` — `{{SENSITIVE_PATHS}}`.
@@ -133,7 +133,7 @@ The first symlinks `.agents/skills/*` into `.claude/skills/` so Claude sees the 
 reads natively from `.agents/skills`. If symlink creation fails (Windows without Developer Mode),
 the script writes forwarding stubs instead — either outcome is fine, just report which happened.
 
-The second generates `specs/INDEX.md`. Read the Drift section and resolve or report every item.
+The second generates `.specs/INDEX.md`. Read the Drift section and resolve or report every item.
 
 ## Step 8 — Report
 
@@ -146,6 +146,6 @@ End with, in this order:
    specific question attached. This is the most important section; do not compress it.
 5. **Drift** — anything `build_index.py` reported under "Drift" that you did not resolve (real
    problems: a dangling glob, ambiguous ownership). Not "Not yet specced" gaps — those are expected.
-6. A reminder that `specs/features/*.md` are `draft` because they're your reading of the code, not
+6. A reminder that `.specs/features/*.md` are `draft` because they're your reading of the code, not
    the author's — and that most of the codebase is likely still unspecced by design; coverage
    grows via `spec-new` and `spec-from-code` as work touches each area, not as a scheduled task.

@@ -12,7 +12,7 @@ You write tests for this project using {{TEST_FRAMEWORK — e.g. JUnit + Turbine
 Tests are load-bearing, not a formality — write them at the same quality bar as production code.
 
 When invoked:
-1. Find the owning spec via `specs/INDEX.md`. Its **acceptance criteria are your checklist** —
+1. Find the owning spec via `.specs/INDEX.md`. Its **acceptance criteria are your checklist** —
    each one is a named Given/When/Then; write one test per criterion, and derive the assertion
    directly from its Then/And clauses rather than guessing at what the criterion implies.
 2. Cover success, failure, and at least one edge case beyond the listed criteria.

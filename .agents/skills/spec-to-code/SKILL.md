@@ -14,7 +14,7 @@ spec's text, and should never happen because an agent noticed a gap on its own.
 ## Scope
 
 - **Named directly** — "implement the checkout spec's retry criterion."
-- **Named by spec id** — look up its `owns` glob in `specs/INDEX.md` to find the code.
+- **Named by spec id** — look up its `owns` glob in `.specs/INDEX.md` to find the code.
 - **The whole spec** — every currently-unchecked acceptance criterion under it.
 
 If the request is ambiguous about how much to implement, ask rather than guessing scope — building
@@ -54,6 +54,6 @@ change yet.
 3. Update the spec's `updated:` date. If every criterion is now checked and reviewed, consider
    whether `status` should move from `draft` to `active` — but leave it as-is if anything remains
    unverified or open.
-4. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
+4. Run `spec-sync` to refresh `.specs/INDEX.md` if this change touched `owns` or moved code.
 5. Report what was implemented, what got checked off, and anything left blocked on an open question
    or a design decision still pending human sign-off.

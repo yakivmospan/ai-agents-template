@@ -18,7 +18,7 @@ Figure out what's in scope before touching anything:
 
 - **Named directly** — "update the checkout spec", a specific spec id or file.
 - **Named by code path** — "I changed src/checkout/pay.ts, update its spec" — look it up in
-  `specs/INDEX.md`.
+  `.specs/INDEX.md`.
 - **Unscoped** ("the specs are stale") — ask which area, rather than reconciling the whole tree
   at once; a project-wide reconciliation is a much bigger and riskier operation than a targeted one,
   and deserves its own explicit go-ahead.
@@ -60,6 +60,6 @@ Figure out what's in scope before touching anything:
 2. Update the spec's `updated:` date. Reconsider `status` — a spec that now accurately describes
    fully-implemented, tested behaviour can move from `draft` to `active`; don't do this
    automatically if there are still open questions or unverified criteria.
-3. Run `spec-sync` to refresh `specs/INDEX.md` if this change touched `owns` or moved code.
+3. Run `spec-sync` to refresh `.specs/INDEX.md` if this change touched `owns` or moved code.
 4. Report concisely: what was updated, what was flagged rather than resolved (constraints, dropped
    requirements, ambiguous resolutions), and why each flagged item wasn't just fixed silently.
