@@ -25,15 +25,14 @@ description: Create a new spec under .specs/ with correct frontmatter, parent li
 6. Check it's actually a feature at all. If nothing depends on this code's *specific* behavior —
    callers just borrow it, like a generic retry helper — it isn't a feature, and doesn't get a spec
    file; document it in `01-architecture.md`/`02-tech.md` instead (see specs.md's "Not every module
-   needs a feature spec"). If it does have a real behavioral contract but no consumer outside this
-   codebase, it's a feature — just an internal one; see "Pick a template" below.
+   needs a feature spec"). A real behavioral contract other code depends on makes it a feature
+   regardless of who the consumer is — see specs.md's "What counts as a feature" row.
 
 ## Pick a template
 
 | Situation | Template | Destination |
 |---|---|---|
-| New feature or module | `.agents/templates/spec-feature.md` | `.specs/features/<slug>.md` |
-| Feature with no consumer outside this codebase (internal) | `.agents/templates/spec-feature.md` | `.specs/features/internal/<slug>.md` |
+| New feature or module | `.agents/templates/spec-feature.md` | `.specs/features/<slug>.md` (nest into subfolders if that helps navigation — see specs.md's "Layout") |
 | Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-contract.md` | `.specs/contracts/<slug>.md` |
 
 Copy it, do not write from memory — the frontmatter contract has required keys.
