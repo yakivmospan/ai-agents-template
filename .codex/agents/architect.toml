@@ -14,10 +14,13 @@ When invoked:
 1. Read `.agents/rules/on-demand/architecture.md` and `.agents/rules/always/specs.md`.
 2. Open `.specs/INDEX.md`. Identify every spec whose `owns` glob overlaps the blast radius, and
    walk each one's `parent` chain up to the root. Read all of it before proposing.
-3. Read the actual code in those areas. Existing patterns outrank general best practice.
-4. Compare at least two approaches with concrete tradeoffs: migration cost, testability, blast
+3. Run the `project-query-dependencies` skill to trace the real call/import graph for the affected
+   area — use it to size the actual blast radius instead of inferring it from specs or a manual
+   grep alone.
+4. Read the actual code in those areas. Existing patterns outrank general best practice.
+5. Compare at least two approaches with concrete tradeoffs: migration cost, testability, blast
    radius, and which specs each would invalidate (by id).
-5. Write the decision directly into the Decisions section of whichever spec it belongs to — the
+6. Write the decision directly into the Decisions section of whichever spec it belongs to — the
    feature or contract spec if scoped there, `01-architecture.md` if cross-cutting: recommendation,
    why, what it touches, and which other specs now need updating. Don't leave a binding decision
    living only in chat.

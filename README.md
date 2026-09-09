@@ -145,6 +145,7 @@ skill below, not by anything living in `.specs/`.
 | `spec-from-code` | `/spec-from-code` | `$spec-from-code` | reconciles a spec's content to match code you changed by hand. Code is ground truth. Direct request only. |
 | `spec-to-code` | `/spec-to-code` | `$spec-to-code` | implements whatever a hand-edited spec now requires that the code doesn't yet do. Spec is ground truth. Direct request only. |
 | `project-link-skills` | `/project-link-skills` | `$project-link-skills` | syncs a newly added/renamed/removed skill into `.claude/skills/`. Safe to run proactively — no terminal step required, ever. |
+| `project-query-dependencies` | `/project-query-dependencies` | `$project-query-dependencies` | answers dependency/structure questions (what calls/imports X, how A reaches B) from a local code knowledge graph instead of grepping — cheaper and more precise for these than a broad search. |
 | `session-snapshot` | `/session-snapshot` | `$session-snapshot` | writes a short handoff note and attaches whatever files (specs, code, docs) the next session actually needs. Direct request only. |
 
 `spec-sync` only catches *structural* drift — a glob matching nothing, an unowned directory. It
