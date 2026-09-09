@@ -148,6 +148,12 @@ skill below, not by anything living in `.specs/`.
 | `project-query-dependencies` | `/project-query-dependencies` | `$project-query-dependencies` | answers dependency/structure questions (what calls/imports X, how A reaches B) from a local code knowledge graph instead of grepping — cheaper and more precise for these than a broad search. |
 | `session-snapshot` | `/session-snapshot` | `$session-snapshot` | writes a short handoff note and attaches whatever files (specs, code, docs) the next session actually needs. Direct request only. |
 
+`project-query-dependencies` needs the third-party `graphify` CLI/skill installed separately — it
+isn't bundled, since it's not part of this template. Install it with
+`uv tool install graphifyy && graphify install` if you want it; without it, the skill will tell you
+it's missing rather than fail silently. Its output (`graphify-out/`) is meant to be committed so
+the whole team shares one map — only `graphify-out/cost.json` (local run costs) is gitignored.
+
 `spec-sync` only catches *structural* drift — a glob matching nothing, an unowned directory. It
 has no way to know that a spec's prose no longer describes what the code actually does, or that a
 spec was edited ahead of the code that should satisfy it — that's a reading-and-judgment problem,

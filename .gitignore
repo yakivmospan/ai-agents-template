@@ -1,2 +1,4 @@
 .DS_Store
 .history/
+graphify-out/cost.json
+graphify-out/cache/

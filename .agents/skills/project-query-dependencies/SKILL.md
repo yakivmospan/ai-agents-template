@@ -5,50 +5,46 @@ description: Use whenever you need to find what calls, imports, inherits from, o
 
 # Project Query Dependencies
 
-Wraps the `graphify` CLI — a local, AST-based code knowledge graph (tree-sitter, no LLM calls for
-code) — to answer dependency and structure questions with one targeted command instead of grepping
-or reading through files by hand.
+Routes dependency, call-graph, and structural questions to the already-installed `graphify` CLI
+instead of grepping or reading files by hand, always scoped to code only via its documented
+`--code-only` flag. Beyond that flag and the `query`/`path`/`explain` commands below — all
+stable, public surface — avoid repeating `graphify`'s other commands or output layout here; those
+are internal or version-specific and `graphify`'s to track, not this skill's.
 
-Output lives in `.agents/graphify/` (`graph.json`, `GRAPH_REPORT.md`, `graph.html`) — kept with the
-rest of the tool-agnostic pool rather than loose at the repo root.
+## What to do
 
-## Before querying
+1. Confirm the `graphify` command is on PATH. If it's missing, ask the user before installing it
+   yourself.
+2. Build or refresh the graph: `graphify extract . --code-only`. This needs no API key and makes
+   no LLM call — it's pure local AST parsing, so there's no interactive skill/subagent dispatch to
+   go through for this. Run it every time this skill's trigger fires; never skip it to save cost,
+   since there's no cost to save.
+3. Answer with the narrowest command that fits — a plain-language question
+   (`graphify query "<question>"`), the path between two named things (`graphify path "<A>" "<B>"`),
+   or an explanation of one concept (`graphify explain "<concept>"`). Use only what it returns.
+   Don't read `graphify-out/graph.json` directly unless none of the three commands cover the need.
 
-1. Check `.agents/graphify/graph.json` exists. If not, create the directory and generate it:
-   `mkdir -p .agents/graphify && graphify extract . --output .agents/graphify`
-2. Check staleness: compare the commit recorded in `graph.json`'s metadata against
-   `git rev-parse HEAD`. If they differ, regenerate (same command as above) before querying. Skip
-   this check if the graph was already (re)generated earlier in this same session.
-3. If `graphify` isn't installed, don't install it silently — that's a new dependency, ask the user
-   first. Point them at `uv tool install graphifyy && graphify install` if they want it.
+**Never hesitate to (re)build.** This skill exists purely for code dependency questions — calls,
+imports, and inheritance all live in code, so docs/papers/images add nothing here and only exist to
+trigger real token cost (LLM-based semantic extraction) — `--code-only` skips that path entirely,
+so extraction stays free regardless of corpus size or how narrow the question is. A single-symbol
+"who depends on X" question is exactly the case this exists for, not a reason to fall back to grep.
+There's also nothing to schedule separately: `graphify extract` caches per-file results internally,
+so re-running it each time this skill fires only re-parses what actually changed. A docs+code
+cross-reference graph ("which code implements this spec section") is a different use of `graphify`
+entirely, outside what this skill does.
 
-## Answering a question
+## When not to use this
 
-Pick the narrowest operation that answers it. Never load the whole graph into context.
-
-| Need | Command |
-|---|---|
-| What depends on / calls / imports X | `graphify query "<question>"` |
-| How A reaches B, or the impact of changing one on the other | `graphify path <A> <B>` |
-| Orient on one concept/module before touching it | `graphify explain <concept>` |
-| Get bearings in an unfamiliar subsystem | read `.agents/graphify/GRAPH_REPORT.md`'s God nodes / Communities sections — already generated, cheap |
-
-Read only the command's own output. Only open `.agents/graphify/graph.json` directly for a query
-none of the above cover, and even then pull the specific nodes/edges you need rather than the
-whole file.
-
-## When this beats grep / Explore / reading files — and when it doesn't
-
-- Dependency, call-graph, or impact questions ("what calls this", "what breaks if I change X", "how
-  does A reach B") → this skill, first. It resolves real relationships, not text matches.
-- A free-text search (a string literal, a TODO, an error message) → grep directly; this won't help.
+- A free-text search (a string literal, a TODO, an error message) → grep instead, this won't help.
 - You already know the exact file to read → just Read it, don't query for it.
-- A question about *why* something was built a certain way → `graphify explain <concept>` surfaces
-  `# NOTE:`/`# WHY:` comments and ADR/RFC citations as first-class nodes, so check there before
-  falling back to the owning spec's Decisions section.
+- A question about *why* something was built a certain way → `graphify explain` first; `# NOTE:`/
+  `# WHY:` comments in code are captured even under `--code-only` (they're part of the source file,
+  not the docs/semantic pass) and may already answer it. Fall back to the owning spec's Decisions
+  section only if that comes up empty.
 
 ## Scope
 
-Code parsing is local and LLM-free by default — nothing leaves the machine. Only the semantic pass
-over docs/PDFs/images/video calls a configured backend, and only if one is set up; don't assume
-that's configured in this project unless told so.
+This skill always runs with `--code-only`, so it never makes an LLM call and nothing leaves the
+machine — regardless of what backends `graphify` supports elsewhere, this skill's own path never
+touches them.
