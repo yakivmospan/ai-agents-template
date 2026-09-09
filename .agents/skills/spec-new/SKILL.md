@@ -22,12 +22,18 @@ description: Create a new spec under .specs/ with correct frontmatter, parent li
    one module of a larger multi-module piece of work parents to that work's contract spec.
 5. If this is one piece of a larger effort spanning multiple modules, check whether a contract spec
    already exists for it before creating a feature spec in isolation — see "Contracts" below.
+6. Check it's actually a feature at all. If nothing depends on this code's *specific* behavior —
+   callers just borrow it, like a generic retry helper — it isn't a feature, and doesn't get a spec
+   file; document it in `01-architecture.md`/`02-tech.md` instead (see specs.md's "Not every module
+   needs a feature spec"). If it does have a real behavioral contract but no consumer outside this
+   codebase, it's a feature — just an internal one; see "Pick a template" below.
 
 ## Pick a template
 
 | Situation | Template | Destination |
 |---|---|---|
 | New feature or module | `.agents/templates/spec-feature.md` | `.specs/features/<slug>.md` |
+| Feature with no consumer outside this codebase (internal) | `.agents/templates/spec-feature.md` | `.specs/features/internal/<slug>.md` |
 | Work spanning multiple modules, needs a shared contract | `.agents/templates/spec-contract.md` | `.specs/contracts/<slug>.md` |
 
 Copy it, do not write from memory — the frontmatter contract has required keys.
