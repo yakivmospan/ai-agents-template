@@ -345,11 +345,11 @@ def render_routes(specs: list[Spec], specs_dir: Path) -> str:
     if not rows:
         return "_No spec declares an `owns` glob yet._"
 
-    out = ["| Code path | Spec | Parent |", "|---|---|---|"]
+    out = ["| Code path | Spec | Parent | Status |", "|---|---|---|---|"]
     for pattern, spec in rows:
         rel = spec.path.relative_to(specs_dir).as_posix()
         parent = f"`{spec.parent}`" if spec.parent else "—"
-        out.append(f"| `{pattern}` | [`{spec.id}`]({rel}) | {parent} |")
+        out.append(f"| `{pattern}` | [`{spec.id}`]({rel}) | {parent} | {spec.status} |")
     return "\n".join(out)
 
 

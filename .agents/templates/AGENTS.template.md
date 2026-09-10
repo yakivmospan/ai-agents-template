@@ -22,7 +22,6 @@ without anyone having to edit this file to match.
 | edit any file listed in the spec index | its owning spec — match its path against `.specs/INDEX.md`, most specific glob wins |
 | write or change production code | `.agents/rules/on-demand/code-style.md` |
 | add a module, move a boundary, choose between designs | `.agents/rules/on-demand/architecture.md` |
-| find what calls/imports/depends on something, or trace a path between two parts of the code | run the `project-query-dependencies` skill instead of grepping by hand |
 
 Add a file to `.agents/rules/on-demand/` and a row here when a new condition needs its own rules.
 

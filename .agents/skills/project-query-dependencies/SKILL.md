@@ -1,9 +1,14 @@
 ---
 name: project-query-dependencies
-description: Use whenever you need to find what calls, imports, inherits from, or otherwise depends on something; trace how one part of the codebase reaches another; or get oriented in an unfamiliar module before changing it. Prefer this over grep or a broad file-reading pass for structural/dependency questions — it resolves real cross-file relationships (calls/imports/inherits, ~40 languages via tree-sitter AST) instead of text matching. Not for full-text search, style questions, or reading a file you already know — use grep/Read directly for those.
+description: Answers dependency, call-graph, and structural questions (what calls/imports/inherits from something, how one part of the codebase reaches another) using the `graphify` CLI. ONLY on direct request — the user explicitly asks to use graphify, or explicitly asks for this skill by name. Never proactive, never invoked in place of grep or a broad file-reading pass just because a question happens to be structural in shape.
 ---
 
 # Project Query Dependencies
+
+**Only run this on direct request.** Do not invoke it, suggest it, or reach for it automatically
+just because a question is structural or dependency-shaped — grep and normal file reading are the
+default even for those questions. Only the user explicitly asking for this skill, or explicitly
+asking to use `graphify`, counts as a request.
 
 Routes dependency, call-graph, and structural questions to the already-installed `graphify` CLI
 instead of grepping or reading files by hand, always scoped to code only via its documented
