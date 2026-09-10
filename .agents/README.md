@@ -8,8 +8,7 @@ Everything in here is tool-agnostic. It is the folder you drag into a new projec
 │   ├── always/      loaded every session, by both tools — manage this folder freely
 │   └── on-demand/   loaded when AGENTS.md's load table says to
 ├── templates/       AGENTS.md and every spec shape; copied from, never edited in place
-├── skills/          shared workflow skills, read by both tools
-└── scripts/         setup tooling for this folder (currently: linking skills for Claude)
+└── skills/          shared workflow skills, read by both tools
 ```
 
 Everything a new project needs from this template lives under `.agents/` plus the three
@@ -66,8 +65,8 @@ but not a manual one. Ask (or just let the agent notice and do it on its own —
 own description) and the `project-link-skills` skill runs the underlying script for you:
 
 ```bash
-bash .agents/scripts/link-skills.sh          # what project-link-skills actually runs, for reference
-powershell -File .agents/scripts/link-skills.ps1   # the Windows equivalent
+bash .agents/skills/project-link-skills/scripts/link-skills.sh          # what project-link-skills actually runs, for reference
+powershell -File .agents/skills/project-link-skills/scripts/link-skills.ps1   # the Windows equivalent
 ```
 
 Nobody needs to type either of those directly. `project-link-skills` is one of the skills that ships with

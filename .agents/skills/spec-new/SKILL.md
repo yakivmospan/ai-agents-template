@@ -91,6 +91,13 @@ Two things are different here from writing a spec for brand-new work:
   existing, working behaviour get written and checked off as already-satisfied — you're
   documenting reality, not proposing a plan. Where the existing behaviour is genuinely unclear or
   looks wrong, that's an Open question, not a criterion you invent to sound complete.
+- **A stub is not the same as existing behaviour.** Code sometimes stands in for something not yet
+  built — a hardcoded return value, a fixed `delay()`, a `// will be implemented later` comment.
+  Don't write the AC around the stand-in and check it off; write it around the real contract that
+  code is meant to satisfy once finished, and leave it unchecked (`- [ ]`). Say what's actually
+  there today — the stub, and that it's a placeholder — as an Open question or a line in
+  Constraints, not folded into the Given/When/Then. A checked AC is a claim that the behaviour
+  exists; a stub means it doesn't yet, no matter how confidently the surrounding code reads.
 - **The `owns` glob doesn't need to cover the whole module right away.** If you're only touching
   one part of a large legacy area, scope the glob to that part now — narrower, real coverage beats
   a wide glob backed by a spec that only actually describes a fraction of what it claims to own.
