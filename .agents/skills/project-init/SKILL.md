@@ -125,7 +125,7 @@ Fill only markers that are still literally `{{...}}`:
 ## Step 7 — Link the shared skill pool and build the index
 
 ```bash
-bash .agents/scripts/link-skills.sh
+bash .agents/skills/project-link-skills/scripts/link-skills.sh
 python3 .agents/skills/spec-sync/scripts/build_index.py
 ```
 

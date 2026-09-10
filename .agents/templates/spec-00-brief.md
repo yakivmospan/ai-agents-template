@@ -24,9 +24,3 @@ updated: {{DATE}}
 {{NON_GOALS — what this deliberately will not do or support, and why. This is what stops an
   agent from "helpfully" adding scope, so be concrete: "no multi-tenant support (single customer
   for now)" is useful, "keep it simple" is not.}}
-
-## Constraints
-{{CONSTRAINTS — timeline, platform, compliance, team size, budget. Only what's actually binding.}}
-
-## Success criteria
-- [ ] {{measurable outcome}}

@@ -5,8 +5,9 @@ description: Sync .agents/skills/ into .claude/skills/ so Claude sees every skil
 
 # Project Link Skills
 
-Wraps `.agents/scripts/link-skills.sh` (or `.ps1` on Windows) so relinking is something you ask
-for — or that just happens — in the conversation, not a manual shell command.
+Wraps `.agents/skills/project-link-skills/scripts/link-skills.sh` (or `.ps1` on Windows) so
+relinking is something you ask for — or that just happens — in the conversation, not a manual
+shell command.
 
 ## When to run this
 
@@ -19,15 +20,16 @@ for — or that just happens — in the conversation, not a manual shell command
 
 ## What to do
 
-1. Confirm `.agents/scripts/link-skills.sh` exists — if this project predates that script (a very
-   old clone of the template), say so and stop rather than guessing at a fallback.
+1. Confirm `.agents/skills/project-link-skills/scripts/link-skills.sh` exists — if this project
+   predates that script (a very old clone of the template), say so and stop rather than guessing
+   at a fallback.
 2. Run it:
    ```bash
-   bash .agents/scripts/link-skills.sh
+   bash .agents/skills/project-link-skills/scripts/link-skills.sh
    ```
    On a Windows environment with no `bash` available, use the PowerShell twin instead:
    ```powershell
-   powershell -File .agents/scripts/link-skills.ps1
+   powershell -File .agents/skills/project-link-skills/scripts/link-skills.ps1
    ```
 3. Read the summary line (`linked: N  stubbed: N  skipped: N  pruned: N`) and report it briefly:
     - `pruned > 0` — mention which skill(s) got removed from `.claude/skills/`, so it's clear that
